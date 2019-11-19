@@ -26,6 +26,7 @@ dependencies:
   shared_preferences: ^0.4.2
   dio: ^3.0.4
   provider: ^3.1.0+1
+  flukit: ^1.0.2
 
 dev_dependencies:
   json_model: ^0.0.2

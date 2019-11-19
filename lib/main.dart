@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
             theme:ThemeData(
               primarySwatch:themeModel.theme,
             ),
+            home:Home(),
             routes: <String,WidgetBuilder>{
               "login": (context) => LoginRoute(),
               "themes": (context) => ThemeChangeRoute(),
