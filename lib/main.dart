@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:github_client_app/common/global.dart';
 import 'package:provider/provider.dart';
+import 'routes/home_page.dart';
 
 void main() => Global.init().then((e) => runApp(MyApp()));
 
