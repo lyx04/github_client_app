@@ -16,8 +16,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MyDrawer(),
       appBar: AppBar(
-        leading: MyDrawer(),
         title: Text("Github客户端"),
       ),
       body: bodybuild(),
@@ -63,9 +63,105 @@ class _MyDrawerState extends State<MyDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      
+      child: Builder(
+        builder: (context) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _buildHeader(),
+              Expanded(
+                child: _buiildMenus(),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
+}
+
+Widget _buildHeader() {
+  return Consumer<UserModel>(
+    builder: (BuildContext context, UserModel value, Widget child) {
+      return GestureDetector(
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          padding: EdgeInsets.only(top: 40, bottom: 20),
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: ClipOval(
+                  child: value.isLogin
+                      ? gmAvater(value.user.avatar_url, width: 80)
+                      : Image.asset(
+                          "imgs/acatar-default.png",
+                          width: 80,
+                        ),
+                ),
+              ),
+              Text(value.isLogin ? value.user.login : "登录",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white)),
+            ],
+          ),
+        ),
+        onTap: () {
+          if (!value.isLogin) Navigator.of(context).pushNamed("login");
+        },
+      );
+    },
+  );
+}
+
+Widget _buiildMenus() {
+  return Consumer<UserModel>(
+    builder: (BuildContext context,UserModel value,Widget child){
+      return  ListView(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.color_lens),
+            title:Text("主题"),
+            onTap: ()=>Navigator.of(context).pushNamed("themes"),
+          ),
+          ListTile(
+            leading: Icon(Icons.language),
+            title:Text("语言"),
+            onTap: ()=>Navigator.of(context).pushNamed("language"),
+          ),
+          if(value.isLogin)ListTile(
+            leading: Icon(Icons.power_settings_new),
+            title:Text("注销"),
+            onTap: (){
+              showDialog(
+                context: context,
+                builder: (BuildContext context){
+                  return AlertDialog(
+                    title: Text("确定退出么"),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text("确定"),
+                        onPressed: (){
+                          value.user = null;
+                          Navigator.pop(context);
+                        },
+                      ),
+                      FlatButton(
+                        child: Text("取消"),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                }
+              );
+            },
+          )
+        ],
+      );
+    },
+  );
 }
 
 class RepoItem extends StatefulWidget {
@@ -138,41 +234,45 @@ class _RepoItemState extends State<RepoItem> {
     );
   }
 
-
-  Widget _buildBottom(){
+  Widget _buildBottom() {
     const paddingWidth = 10;
     return IconTheme(
-      data:IconThemeData(
-        color:Colors.grey,
-        size:15
-      ),
-      child:DefaultTextStyle(
-        style:TextStyle(color: Colors.grey,fontSize: 12),
-        child:Padding(
-          padding:EdgeInsets.symmetric(horizontal: 16),
-          child:Builder(builder: (context){
-            var children = <Widget>[
-              Icon(Icons.star),
-              Text(""+widget.repo.stargazers_count.toString().padRight(paddingWidth),),
-                Text(" " +
-                  widget.repo.open_issues_count
-                      .toString()
-                      .padRight(paddingWidth)),
+        data: IconThemeData(color: Colors.grey, size: 15),
+        child: DefaultTextStyle(
+            style: TextStyle(color: Colors.grey, fontSize: 12),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Builder(
+                builder: (context) {
+                  var children = <Widget>[
+                    Icon(Icons.star),
+                    Text(
+                      "" +
+                          widget.repo.stargazers_count
+                              .toString()
+                              .padRight(paddingWidth),
+                    ),
+                    Text(" " +
+                        widget.repo.open_issues_count
+                            .toString()
+                            .padRight(paddingWidth)),
 
-              // Icon(MyIcons.fork), //我们的自定义图标
-              Text(widget.repo.forks_count.toString().padRight(paddingWidth),),
-            ];
-            if(widget.repo.private == true){
-              children.addAll(<Widget>[
-                Icon(Icons.lock),
-                Text(" private".padRight(paddingWidth),),
-              ]);
-            }
-            return Row(children:children,)
-          },),
-        )
-      )
-    );
+                    // Icon(MyIcons.fork), //我们的自定义图标
+                    Text(
+                      widget.repo.forks_count.toString().padRight(paddingWidth),
+                    ),
+                  ];
+                  if (widget.repo.private == true) {
+                    children.addAll(<Widget>[
+                      Icon(Icons.lock),
+                      Text(
+                        " private".padRight(paddingWidth),
+                      ),
+                    ]);
+                  }
+                  return Row(children: children);
+                },
+              ),
+            )));
   }
 }
-
