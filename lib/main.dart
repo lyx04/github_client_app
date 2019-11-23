@@ -3,6 +3,7 @@ import 'package:github_client_app/common/global.dart';
 import 'package:provider/provider.dart';
 import 'routes/home_page.dart';
 import 'routes/login.dart';
+import "routes/theme.dart";
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
             home: Home(),
             routes: <String, WidgetBuilder>{
               "login": (context) => LoginRoute(),
-              // "themes": (context) => ThemeChangeRoute(),
+              "themes": (context) => ThemeChangeRoute(),
               // "language": (context) => LanguageRoute(),
             },
           );

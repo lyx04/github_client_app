@@ -22,9 +22,9 @@ class Git {
 
   static void init() {
     //添加缓存插件
-    // dio.interceptors.add(Global.netCache);
+    dio.interceptors.add(Global.netCache);
     //设置用户token(可能是null，代表未登录)
-    dio.options.headers[HttpHeaders.authorizationHeader] = Global.profile.token;
+    dio.options.headers.addAll({"Authorization":Global.profile.token});
     dio.options.headers.addAll({"User-Agent":Global.profile.user.login});
     if (!Global.isRelease) {
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
@@ -45,7 +45,7 @@ class Git {
 
   //获取用户信息
   Future<User> login(String login, String pwd) async {
-    String basic = 'Basic' + base64.encode(utf8.encode("$login:$pwd"));
+    String basic = 'Basic ' + base64.encode(utf8.encode("$login:$pwd"));
     var r = await dio.get(
       "users/$login",
       options: Options(
@@ -57,7 +57,7 @@ class Git {
         },
       ),
     );
-    dio.options.headers[HttpHeaders.authorizationHeader] = basic;
+    dio.options.headers.addAll({"Authorization":basic});
     Global.netCache.cache.clear();
     Global.profile.token = basic;
     return User.fromJson(r.data);
@@ -66,7 +66,7 @@ class Git {
   //获取项目列表
   Future<List<Repo>> getRepos(
       {Map<String, dynamic> queryParameters, refresh = false}) async {
-    dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
+    // dio.interceptors.add(LogInterceptor(responseBody: false)); //开启请求日志
 
     if (refresh) {
       _options.extra.addAll({"refresh": true, "list": true});

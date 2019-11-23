@@ -116,48 +116,48 @@ Widget _buildHeader() {
 
 Widget _buiildMenus() {
   return Consumer<UserModel>(
-    builder: (BuildContext context,UserModel value,Widget child){
-      return  ListView(
+    builder: (BuildContext context, UserModel value, Widget child) {
+      return ListView(
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.color_lens),
-            title:Text("主题"),
-            onTap: ()=>Navigator.of(context).pushNamed("themes"),
+            title: Text("主题"),
+            onTap: () => Navigator.of(context).pushNamed("themes"),
           ),
-          ListTile(
-            leading: Icon(Icons.language),
-            title:Text("语言"),
-            onTap: ()=>Navigator.of(context).pushNamed("language"),
-          ),
-          if(value.isLogin)ListTile(
-            leading: Icon(Icons.power_settings_new),
-            title:Text("注销"),
-            onTap: (){
-              showDialog(
-                context: context,
-                builder: (BuildContext context){
-                  return AlertDialog(
-                    title: Text("确定退出么"),
-                    actions: <Widget>[
-                      FlatButton(
-                        child: Text("确定"),
-                        onPressed: (){
-                          value.user = null;
-                          Navigator.pop(context);
-                        },
-                      ),
-                      FlatButton(
-                        child: Text("取消"),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  );
-                }
-              );
-            },
-          )
+          // ListTile(
+          //   leading: Icon(Icons.language),
+          //   title: Text("语言"),
+          //   onTap: () => Navigator.of(context).pushNamed("language"),
+          // ),
+          if (value.isLogin)
+            ListTile(
+              leading: Icon(Icons.power_settings_new),
+              title: Text("注销"),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text("确定退出么"),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text("确定"),
+                            onPressed: () {
+                              value.user = null;
+                              Navigator.pop(context);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text("取消"),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      );
+                    });
+              },
+            )
         ],
       );
     },
@@ -200,6 +200,7 @@ class _RepoItemState extends State<RepoItem> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       widget.repo.fork
@@ -215,7 +216,7 @@ class _RepoItemState extends State<RepoItem> {
                     Padding(
                       padding: EdgeInsets.only(top: 8, bottom: 12),
                       child: Text(
-                        widget.repo.description,
+                        widget.repo.description ?? "暂无",
                         maxLines: 3,
                         style: TextStyle(
                             height: 1.5,
