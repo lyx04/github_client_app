@@ -26,6 +26,7 @@ class Global {
   static Future init() async {
     _prefs = await SharedPreferences.getInstance(); //获取实例
     var _profile = _prefs.getString("profile");
+    print("------------------------------------");
     print(_profile);
     if (_profile != null) {
       try {
